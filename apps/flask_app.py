@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask, jsonify, request
 import psycopg2
 from psycopg2.extras import RealDictCursor
@@ -5,11 +7,11 @@ from psycopg2.extras import RealDictCursor
 app = Flask(__name__)
 
 # Database connection details
-DB_HOST = "localhost"
-DB_PORT = 55432
-DB_USER = "sidekick"
-DB_PASSWORD = "e11bdce55e98df0da1487239068ba88a9c0798ab2ab4a9137742fd377dba27b8"
-DB_NAME = "ebdb"
+DB_HOST = os.getenv("DB_HOST")
+DB_PORT = int(os.getenv('DB_PORT'))
+DB_USER = os.getenv("DB_USER")
+DB_PASSWORD = os.getenv("DB_PASSWORD")
+DB_NAME = os.getenv("DB_NAME")
 
 def get_db_connection():
     conn = psycopg2.connect(
@@ -60,7 +62,6 @@ def get_daily_referrals():
 
         cursor.close()
         conn.close()
-
         return jsonify(referrals)
     except Exception as e:
         return jsonify({'error': str(e)})
